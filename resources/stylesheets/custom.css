@@ -1,0 +1,40 @@
+.resource_action_checkbox {
+    cursor: pointer;
+}
+
+.pagination {
+    margin: 0;
+}
+
+th.sorting {
+    background: url(/images/sort_both.png) no-repeat center right;
+}
+
+th.sorting.asc {
+    background: url(/images/sort_asc.png) no-repeat center right;
+}
+
+th.sorting.desc {
+    background: url(/images/sort_desc.png) no-repeat center right;
+}
+
+.media-body {
+    padding-left: 5px;
+}
+
+.pre {
+    white-space: pre-wrap;
+    font-size: 11px;
+}
+
+.contentpanel select.form-control {
+    height: 40px;
+}
+
+h4.sender {
+    font-size: 14px;
+}
+
+.list-group-sorting .btn.sorting {
+    padding: 5px 10px;
+}
