@@ -64,7 +64,7 @@ module.exports = function (grunt) {
                         './resources/stylesheets/chain/select2.min.css',
                         './resources/stylesheets/chain/select2-bootstrap.css',
                         './node_modules/bootstrap-daterangepicker/daterangepicker.css',
-                        './node_modules/components-font-awesome/css/font-awesome.css',
+                        './node_modules/font-awesome/css/font-awesome.css',
                         './resources/stylesheets/custom.css'
                     ]
                 }
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['./node_modules/components-font-awesome/fonts/*',
+                        src: ['./node_modules/font-awesome/fonts/*',
                             './node_modules/bootstrap/fonts/*'],
                         dest: './app/assets/fonts/',
                         filter: 'isFile'
