@@ -27,14 +27,14 @@ module.exports = function (grunt) {
                     './resources/javascripts/chain/bootstrap.min.js',
                     './resources/javascripts/chain/modernizr.min.js',
                     './resources/javascripts/chain/pace.min.js',
-                    './resources/bower_components/moment/moment.js',
+                    './node_modules/moment/moment.js',
                     './resources/javascripts/chain/retina.min.js',
                     './resources/javascripts/chain/select2.full.min.js',
                     './resources/javascripts/chain/jquery.cookies.js',
                     './resources/javascripts/chain/bootstrap-timepicker.min.js',
                     './resources/javascripts/chain/wysihtml5-0.3.0.min.js',
                     './resources/javascripts/chain/bootstrap-wysihtml5.js',
-                    './resources/bower_components/bootstrap-daterangepicker/daterangepicker.js',
+                    './node_modules/bootstrap-daterangepicker/daterangepicker.js',
                     './node_modules/tinymce/tinymce.js',
                     './node_modules/tinymce/themes/modern/theme.js',
                     './app/assets/javascripts/build.min.js'
@@ -63,8 +63,8 @@ module.exports = function (grunt) {
                         './resources/stylesheets/chain/bootstrap-timepicker.min.css',
                         './resources/stylesheets/chain/select2.min.css',
                         './resources/stylesheets/chain/select2-bootstrap.css',
-                        './resources/bower_components/bootstrap-daterangepicker/daterangepicker.css',
-                        './resources/bower_components/components-font-awesome/css/font-awesome.css',
+                        './node_modules/bootstrap-daterangepicker/daterangepicker.css',
+                        './node_modules/components-font-awesome/css/font-awesome.css',
                         './resources/stylesheets/custom.css'
                     ]
                 }
@@ -76,8 +76,8 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['./resources/bower_components/components-font-awesome/fonts/*',
-                            './resources/bower_components/bootstrap/fonts/*'],
+                        src: ['./node_modules/components-font-awesome/fonts/*',
+                            './node_modules/bootstrap/fonts/*'],
                         dest: './app/assets/fonts/',
                         filter: 'isFile'
                     },
