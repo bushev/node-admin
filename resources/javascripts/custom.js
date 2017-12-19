@@ -91,7 +91,7 @@ jQuery(document).ready(function () {
                     if (inputType === 'checkbox' && $(this).prop('checked')) {
                         queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', value);
                     } else {
-                        queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', value);
+                        queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', '');
                     }
                 } else {
                     queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', '');
