@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="description" content="">
 
-  <title>{% if pageTitle %}{{ pageTitle }}{% else %}{% endif %} {% if globalConfig && globalConfig.project && globalConfig.project.name %} | {{ globalConfig.project.name }}{% endif %}</title>
+  <title>{% if pageTitle %}{{ pageTitle }}{% else %}{% endif %} {% if globalConfig and globalConfig.project and globalConfig.project.name %} | {{ globalConfig.project.name }}{% endif %}</title>
 
-  <link href="/adminAssets/stylesheets/build.min.css" rel="stylesheet">
+  <link href="/adminAssets/stylesheets/build.min.css?v=1" rel="stylesheet">
 
   <!--[if lt IE 9]>
   <script src="/adminAssets/javascripts/build_lt_ie_9_js.min.js"></script>
@@ -63,7 +63,7 @@
 
 </section>
 
-<script src="/adminAssets/javascripts/build.min.js"></script>
+<script src="/adminAssets/javascripts/build.min.js?v=1"></script>
 <script src="/adminAssets/javascripts/ckeditor/ckeditor.js"></script>
 
 {% block page_js %}{% endblock %}
