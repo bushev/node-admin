@@ -88,10 +88,14 @@ jQuery(document).ready(function () {
                 var inputType = $(this).prop('type');
 
                 if (value) {
-                    if (inputType === 'checkbox' && $(this).prop('checked')) {
-                        queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', value);
+                    if (inputType === 'checkbox') {
+                        if ($(this).prop('checked')) {
+                            queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', value);
+                        } else {
+                            queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', '');
+                        }
                     } else {
-                        queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', '');
+                        queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', value);
                     }
                 } else {
                     queryString = queryStringHelper.getUpdatedQueryString(queryString, 'filter[' + name + ']', '');
