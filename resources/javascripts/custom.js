@@ -573,7 +573,7 @@ $(document).ready(function () {
 
     $(wrapper).on("click", ".remove_field", function (e) {
         e.preventDefault();
-        $(this).parent('div').remove();
+        $(this).parent().parent('div').remove();
         x--;
     });
 });

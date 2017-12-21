@@ -33,7 +33,7 @@
             <div class="input-group">
               <input type="text" class="form-control" name="actions[]" value="{{ action }}">
               <span class="input-group-btn">
-                  <button class="remove_field btn btn-danger btn-sm" type="button">
+                  <button class="remove_field btn btn-danger" type="button">
                     <i class="fa fa-times" aria-hidden="true"></i> Remove
                   </button>
                 </span>
