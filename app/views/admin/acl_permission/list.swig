@@ -32,8 +32,8 @@
             {% set permission_id = undefined %}
 
             {% for permission in items %}
-              {% if permission.aclRole.toString() === role._id.toString() and
-              permission.aclResource === resource.name and
+              {% if permission.aclRole.toString() === role.id and
+              permission.aclResource.toString() === resource.id and
               permission.actionName === action %}
               {% set checked = true %}
                 {% set permission_id = permission._id.toString() %}
@@ -42,7 +42,7 @@
             <td>
               <input type="checkbox" class="resource_action_checkbox"
                       {% if checked %} checked data-permission_id="{{ permission_id }}" {% endif %}
-                     data-role="{{ role._id.toString() }}" data-resource="{{ resource.name }}"
+                     data-role="{{ role.id }}" data-resource="{{ resource.id }}"
                      data-action="{{ action }}" data-base_url="{{ baseUrl }}"
                      data-create_url="{{ createActionUrl }}">
             </td>

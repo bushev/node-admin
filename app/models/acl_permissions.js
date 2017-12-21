@@ -27,7 +27,7 @@ class AclPermissionModel extends BaseModel {
 
         const schemaObject = {
             aclRole: {type: Types.ObjectId, ref: 'acl_roles', required: true},
-            aclResource: {type: String, required: true},
+            aclResource: {type: Types.ObjectId, ref: 'acl_resources', required: true},
             actionName: {type: String, required: true}
         };
 
@@ -65,15 +65,15 @@ class AclPermissionModel extends BaseModel {
         this.acl = new aclModule(new aclModule.memoryBackend());
 
         this.model.find({})
-            .populate('aclRole')
+            .populate('aclRole aclResource')
             .exec((err, permissions) => {
                 if (err) return callback(err);
 
                 permissions.forEach(permission => {
 
-                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource + ' [' + permission.actionName + ']');
+                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
 
-                    this.acl.allow(permission.aclRole.name, permission.aclResource, permission.actionName);
+                    this.acl.allow(permission.aclRole.name, permission.aclResource.name, permission.actionName);
                 });
 
                 callback(null, this.acl);

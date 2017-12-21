@@ -35,6 +35,9 @@ class AclResourceModel extends BaseModel {
 
         DBOSchema.post('save', function () {
 
+            // Action changed?
+            // TODO: Rename actions in permissions collection???
+
             // Rebuild ACL
             require('./acl_permissions').initAcl(err => {
                 if (err) $this.logger.error(err);
