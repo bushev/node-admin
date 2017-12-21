@@ -1,24 +1,12 @@
 'use strict';
 
-/**
- * Requiring Core Library
- */
-var Core = process.mainModule.require('nodejs-lib');
+const Core      = process.mainModule.require('nodejs-lib');
+const BaseModel = require('./base');
 
-/**
- * Base model
- */
-var BaseModel = require('./base');
-
-/**
- *  Permissions model
- */
 class AclPermissionModel extends BaseModel {
-    /**
-     * Model constructor
-     */
+
     constructor(listName) {
-        // We must call super() in child class to have access to 'this' in a constructor
+
         super(listName);
 
         /**
@@ -35,32 +23,32 @@ class AclPermissionModel extends BaseModel {
      */
     defineSchema() {
 
-        var Types = this.mongoose.Schema.Types;
+        const Types = this.mongoose.Schema.Types;
 
-        var schemaObject = {
-            "aclRole": {type: Types.ObjectId, ref: 'acl_roles'},
-            "aclResource": String,
-            "actionName": String
+        const schemaObject = {
+            aclRole: {type: Types.ObjectId, ref: 'acl_roles'},
+            aclResource: {type: String},
+            actionName: {type: String}
         };
 
-        //Creating DBO Schema
-        var AclPermissionDBOSchema = this.createSchema(schemaObject);
+        // Creating DBO Schema
+        const AclPermissionDBOSchema = this.createSchema(schemaObject);
 
-        AclPermissionDBOSchema.post('save', function (permission) {
-            require('./acl_roles').findById(permission.aclRole, function(err, role) {
-                if (err) return console.log(err);
+        AclPermissionDBOSchema.post('save', () => {
+            require('./acl_roles').findById(permission.aclRole, (err, role) => {
+                if (err) return this.logger.error(err);
 
                 this.acl.allow(role.name, permission.aclResource, permission.actionName);
-            }.bind(this));
-        }.bind(this));
+            });
+        });
 
-        AclPermissionDBOSchema.post('remove', function (permission) {
-            require('./acl_roles').findById(permission.aclRole, function(err, role) {
-                if (err) return console.log(err);
+        AclPermissionDBOSchema.post('remove', permission => {
+            require('./acl_roles').findById(permission.aclRole, (err, role) => {
+                if (err) return this.logger.error(err);
 
                 this.acl.removeAllow(role.name, permission.aclResource, permission.actionName);
-            }.bind(this));
-        }.bind(this));
+            });
+        });
 
         // Registering schema and initializing model
         this.registerSchema(AclPermissionDBOSchema);
@@ -72,25 +60,24 @@ class AclPermissionModel extends BaseModel {
      * @param callback
      */
     initAcl(callback) {
-        var aclModule = require('acl');
+        const aclModule = require('acl');
 
         this.acl = new aclModule(new aclModule.memoryBackend());
 
         this.model.find({})
             .populate('aclRole', 'name')
-            .exec(function (err, permissions) {
+            .exec((err, permissions) => {
                 if (err) return callback(err);
 
-                permissions.forEach(function (permission) {
+                permissions.forEach(permission => {
+
+                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
 
                     this.acl.allow(permission.aclRole.name, permission.aclResource, permission.actionName);
-                    //console.log('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
-
-                }.bind(this));
+                });
 
                 callback(null, this.acl);
-
-            }.bind(this));
+            });
     }
 
     /**

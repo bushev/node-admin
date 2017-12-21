@@ -56,7 +56,8 @@ class AdminAclResources extends AdminBaseCrudController {
     getItemFromRequest(item) {
         const result = super.getItemFromRequest(item);
 
-        result.name = this.request.body.name;
+        result.name    = this.request.body.name;
+        result.actions = this.request.body.actions || [];
 
         return result;
     }

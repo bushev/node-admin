@@ -1,30 +1,13 @@
 'use strict';
 
-/**
- * Requiring Core Library
- */
-var Core = process.mainModule.require('nodejs-lib');
+const Core      = process.mainModule.require('nodejs-lib');
+const BaseModel = require('./base');
+const async     = require('async');
 
-/**
- * Base model
- */
-var BaseModel = require('./base');
-
-/**
- * Async library
- * @type {async|exports|module.exports}
- */
-var async = require('async');
-
-/**
- *  User Roles model
- */
 class AclRoleModel extends BaseModel {
-    /**
-     * Model constructor
-     */
+
     constructor(listName) {
-        // We must call super() in child class to have access to 'this' in a constructor
+
         super(listName);
 
         /**
@@ -32,7 +15,7 @@ class AclRoleModel extends BaseModel {
          * 1. Call enableAudit()
          * 2. Do not forget to add `last_modified_by` field to this schema.
          */
-        this.enableAudit();
+        // this.enableAudit();
     }
 
     /**
@@ -42,78 +25,43 @@ class AclRoleModel extends BaseModel {
      */
     defineSchema() {
 
-        var Types = this.mongoose.Schema.Types;
+        const $this = this;
 
-        var schemaObject = {
-            "name": String,
-            "last_modified_by": {type: Types.ObjectId, ref: 'user'}
+        const schemaObject = {
+            name: {type: String, index: true, unique: true}
         };
 
-        //Creating DBO Schema
-        var AclRoleDBOSchema = this.createSchema(schemaObject);
+        // Creating DBO Schema
+        const AclRoleDBOSchema = this.createSchema(schemaObject);
 
         AclRoleDBOSchema.post('remove', function () {
-            var role = this;
+
+            const role = this;
 
             require('./acl_permissions').model.find({
-                aclRole: role._id
-            }, function (err, permissions) {
-                if (err) return console.log(err);
+                aclRole: role.id
+            }, (err, permissions) => {
+                if (err) return $this.logger.error(err);
 
-                async.each(permissions, function (permission, callback) {
+                async.each(permissions, (permission, callback) => {
 
-                    permission.remove(function (err) {
-                        callback(err);
-                    });
+                    permission.remove(callback);
 
-                }, function (err) {
-                    if (err) console.log(err);
-                })
+                }, err => {
+                    if (err) return $this.logger.error(err);
+                });
             });
         });
 
         // Registering schema and initializing model
         this.registerSchema(AclRoleDBOSchema);
     }
-
-    /**
-     * Validating item before save
-     *
-     * @param item
-     * @param validationCallback
-     * @returns {[]}
-     */
-    validate(item, validationCallback) {
-        var validationMessages = [];
-
-        if (item.name == '') {
-            validationMessages.push('Name cannot be empty');
-        }
-
-        if (validationMessages.length == 0) {
-            var searchPattern = item.id != null ? {"$and": [{name: item.name}, {_id: {"$ne": item.id.toString()}}]} : {name: item.name};
-            this.model.findOne(searchPattern, function (error, document) {
-                if (error != null) {
-                    validationMessages.push(error.message);
-                    return validationCallback(Core.ValidationError.create(validationMessages));
-                }
-
-                if (document != null && (item.id == null || item.id.toString() != document.id.toString())) {
-                    validationMessages.push('Acl Role with the same name already exists in the database');
-                }
-
-                return validationCallback(Core.ValidationError.create(validationMessages));
-            });
-        } else {
-            validationCallback(Core.ValidationError.create(validationMessages));
-        }
-    }
 }
 
 /**
  * Creating instance of the model
  */
-var modelInstance = new AclRoleModel('acl_roles');
+const modelInstance = new AclRoleModel('acl_roles');
 
 /**
  * Exporting Model
