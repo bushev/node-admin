@@ -60,10 +60,12 @@ class AclRoleModel extends BaseModel {
                 });
             });
 
-            // Rebuild ACL
-            require('./acl_permissions').initAcl(err => {
-                if (err) $this.logger.error(err);
-            });
+            setTimeout(() => {
+                // Rebuild ACL
+                require('./acl_permissions').initAcl(err => {
+                    if (err) $this.logger.error(err);
+                });
+            }, 1000);
         });
 
         // Registering schema and initializing model

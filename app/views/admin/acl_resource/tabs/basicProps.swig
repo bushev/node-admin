@@ -24,8 +24,10 @@
             <i class="fa fa-plus" aria-hidden="true"></i> Add More
           </button>
 
-          {% if not item.actions %}
-            {% set item.actions = [''] %}
+          {% if item %}
+            {% set actions = item.actions %}
+          {% else %}
+            {% set actions = [''] %}
           {% endif %}
 
           {% for action in item.actions %}
