@@ -33,6 +33,14 @@ class AclResourceModel extends BaseModel {
 
         const DBOSchema = this.createSchema(schemaObject);
 
+        DBOSchema.post('save', function () {
+
+            // Rebuild ACL
+            require('./acl_permissions').initAcl(err => {
+                if (err) $this.logger.error(err);
+            });
+        });
+
         // Remove all associated permissions
         DBOSchema.post('remove', function () {
 
@@ -50,6 +58,11 @@ class AclResourceModel extends BaseModel {
                 }, err => {
                     if (err) $this.logger.error(err);
                 });
+            });
+
+            // Rebuild ACL
+            require('./acl_permissions').initAcl(err => {
+                if (err) $this.logger.error(err);
             });
         });
 

@@ -32,9 +32,17 @@ class AclRoleModel extends BaseModel {
         };
 
         // Creating DBO Schema
-        const AclRoleDBOSchema = this.createSchema(schemaObject);
+        const DBOSchema = this.createSchema(schemaObject);
 
-        AclRoleDBOSchema.post('remove', function () {
+        DBOSchema.post('save', function () {
+
+            // Rebuild ACL
+            require('./acl_permissions').initAcl(err => {
+                if (err) $this.logger.error(err);
+            });
+        });
+
+        DBOSchema.post('remove', function () {
 
             const role = this;
 
@@ -51,10 +59,15 @@ class AclRoleModel extends BaseModel {
                     if (err) return $this.logger.error(err);
                 });
             });
+
+            // Rebuild ACL
+            require('./acl_permissions').initAcl(err => {
+                if (err) $this.logger.error(err);
+            });
         });
 
         // Registering schema and initializing model
-        this.registerSchema(AclRoleDBOSchema);
+        this.registerSchema(DBOSchema);
     }
 }
 
