@@ -38,3 +38,7 @@ h4.sender {
 .list-group-sorting .btn.sorting {
     padding: 5px 10px;
 }
+
+.acl_actions_input_fields_wrap > div {
+    margin-bottom: 5px;
+}

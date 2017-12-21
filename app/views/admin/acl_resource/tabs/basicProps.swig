@@ -19,10 +19,26 @@
       <div class="col-sm-4">
 
         <div class="acl_actions_input_fields_wrap">
-          <button class="acl_actions_add_field_button">Add More</button>
-          <div>
-            <input type="text" class="form-control" name="actions[]">
-          </div>
+
+          <button class="acl_actions_add_field_button btn btn-primary btn-sm">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add More
+          </button>
+
+          <br>
+
+          {% for action in item.actions %}
+
+            <div>
+              <input type="text" class="form-control" name="actions[]">
+              {% if not loop.first %}
+                <a href="#" class="remove_field btn btn-danger btn-sm">
+                  <i class="fa fa-times" aria-hidden="true"></i> Remove
+                </a>
+              {% endif %}
+            </div>
+
+          {% endfor %}
+
         </div>
 
       </div>
