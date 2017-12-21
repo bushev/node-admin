@@ -209,6 +209,9 @@ class Loader extends Core.AppBootstrap {
                         name: 'Permissions',
                         url: '/admin/acl_permissions'
                     }, {
+                        name: 'Resources',
+                        url: '/admin/acl_resources'
+                    }, {
                         name: 'Roles',
                         url: '/admin/acl_roles'
                     }]
