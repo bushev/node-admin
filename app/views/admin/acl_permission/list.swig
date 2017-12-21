@@ -32,8 +32,8 @@
             {% set permission_id = undefined %}
 
             {% for permission in items %}
-              {% if permission.aclRole.toString() === role._id.toString() &&
-              permission.aclResource === resource.name &&
+              {% if permission.aclRole.toString() === role._id.toString() and
+              permission.aclResource === resource.name and
               permission.actionName === action %}
               {% set checked = true %}
                 {% set permission_id = permission._id.toString() %}

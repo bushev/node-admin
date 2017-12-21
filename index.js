@@ -57,6 +57,7 @@ class Loader extends Core.AppBootstrap {
         this.applicationFacade.registry.push('Admin.Controllers.BaseCRUD', Loader.Admin.Controllers.BaseCRUD);
         this.applicationFacade.registry.push('Admin.Models.ACLPermissions', Loader.Admin.Models.ACLPermissions);
         this.applicationFacade.registry.push('Admin.Models.ACLRoles', Loader.Admin.Models.ACLRoles);
+        this.applicationFacade.registry.push('Admin.Models.ACLResources', Loader.Admin.Models.ACLResources);
         this.applicationFacade.registry.push('Admin.Models.Base', Loader.Admin.Models.Base);
         this.applicationFacade.registry.push('Admin.Models.Configuration', Loader.Admin.Models.Configuration);
         this.applicationFacade.registry.push('Admin.Models.LogAudit', Loader.Admin.Models.LogAudit);
@@ -298,6 +299,7 @@ Loader.Admin = {
     Models: {
         ACLPermissions: require('./app/models/acl_permissions.js'),
         ACLRoles: require('./app/models/acl_roles.js'),
+        ACLResources: require('./app/models/acl_resources'),
         Base: require('./app/models/base.js'),
         Configuration: require('./app/models/configuration.js'),
         Counters: require('./app/models/counters.js'),

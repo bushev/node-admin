@@ -1,29 +1,13 @@
 'use strict';
 
-/**
- * Requiring Core Library
- */
-var Core = process.mainModule.require('nodejs-lib');
+const AdminBaseCrudController = require('./basecrud.js');
+const async                   = require('async');
 
-/**
- * Requiring base Controller
- */
-var AdminBaseCrudController = require('./basecrud.js');
-
-// Loading Async helpers
-var async = require('async');
-
-/**
- *  AdminAclPermissions controller
- */
 class AdminAclPermissions extends AdminBaseCrudController {
 
-    /**
-     * Controller constructor
-     */
-    constructor(request, response) {
-        // We must call super() in child class to have access to 'this' in a constructor
-        super(request, response);
+    constructor(request, response, next) {
+
+        super(request, response, next);
 
         /**
          * Current CRUD model instance
@@ -50,37 +34,32 @@ class AdminAclPermissions extends AdminBaseCrudController {
         this._viewsPath = 'acl_permission';
     }
 
-    load(readyCallback) {
-        super.load(function (err) {
-            if (err) return readyCallback(err);
+    load(callback) {
+        super.load(err => {
+            if (err) return callback(err);
 
-            async.parallel([function (callback) {
-                // TODO: Maybe we can improve this to not use try-catch
-                try {
-                    Core.ApplicationFacade.instance.registry.load('Application.Models.ACLResources').getAll(function (err, resources) {
-                        if (err) return callback();
+            async.parallel([callback => {
 
-                        this.data.resources = resources;
+                require('../models/acl_resources').getAll((err, resources) => {
+                    if (err) return callback();
 
-                        callback();
-                    }.bind(this));
-                } catch (ex) {
-                    console.error(ex);
-                    this.data.resources = [];
+                    this.data.resources = resources;
+
                     callback();
-                }
-            }.bind(this), function (callback) {
+                });
 
-                require('../models/acl_roles.js').getAll(function (err, roles) {
+            }, callback => {
+
+                require('../models/acl_roles.js').getAll((err, roles) => {
                     if (err) return callback();
 
                     this.data.roles = roles;
 
                     callback();
-                }.bind(this));
+                });
 
-            }.bind(this)], readyCallback);
-        }.bind(this));
+            }], callback);
+        });
     }
 
     /**
@@ -103,7 +82,7 @@ class AdminAclPermissions extends AdminBaseCrudController {
      * @returns {{}}
      */
     getItemFromRequest(item) {
-        var result = super.getItemFromRequest(item);
+        const result = super.getItemFromRequest(item);
 
         result.aclRole     = this.request.body.aclRole;
         result.aclResource = this.request.body.aclResource;
@@ -119,7 +98,6 @@ class AdminAclPermissions extends AdminBaseCrudController {
  *
  * @type {Function}
  */
-module.exports = function (request, response) {
-    var controller = new AdminAclPermissions(request, response);
-    controller.run();
+module.exports = (request, response, next) => {
+    new AdminAclPermissions(request, response, next).run();
 };

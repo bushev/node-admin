@@ -105,6 +105,12 @@ module.exports = () => {
     if (Core.ApplicationFacade.instance.config.env.NODEJS_ADMIN_NAVIGATION_ACL === 'yes') {
 
         routes = merge(routes, {
+            // ACL Resources management routes
+            'get|/admin/acl_resources': 'acl_resources.js',
+            'get|/admin/acl_resources/page/:page': 'acl_resources.js',
+            'get,post|/admin/acl_resources/:action': 'acl_resources.js',
+            'get,post|/admin/acl_resources/:id/:action': 'acl_resources.js',
+
             // ACL Roles management routes
             'get|/admin/acl_roles': 'acl_roles.js',
             'get|/admin/acl_roles/page/:page': 'acl_roles.js',
