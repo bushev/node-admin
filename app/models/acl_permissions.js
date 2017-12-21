@@ -65,13 +65,13 @@ class AclPermissionModel extends BaseModel {
         this.acl = new aclModule(new aclModule.memoryBackend());
 
         this.model.find({})
-            .populate('aclRole', 'name')
+            .populate('aclRole')
             .exec((err, permissions) => {
                 if (err) return callback(err);
 
                 permissions.forEach(permission => {
 
-                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
+                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource + ' [' + permission.actionName + ']');
 
                     this.acl.allow(permission.aclRole.name, permission.aclResource, permission.actionName);
                 });
