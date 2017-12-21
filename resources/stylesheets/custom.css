@@ -42,3 +42,7 @@ h4.sender {
 .acl_actions_input_fields_wrap > div {
     margin-bottom: 5px;
 }
+
+.acl_actions_add_field_button {
+    margin-bottom: 10px;
+}

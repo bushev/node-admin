@@ -558,22 +558,22 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    var max_fields = 10; //maximum input boxes allowed
-    var wrapper    = $(".acl_actions_input_fields_wrap"); //Fields wrapper
-    var add_button = $(".acl_actions_add_field_button"); //Add button ID
+    var max_fields = 100;
+    var wrapper    = $(".acl_actions_input_fields_wrap");
+    var add_button = $(".acl_actions_add_field_button");
 
-    var x = 1; //initlal text box count
-    $(add_button).click(function (e) { //on add input button click
+    var x = 1;
+    $(add_button).click(function (e) {
         e.preventDefault();
-        if (x < max_fields) { //max input box allowed
-            x++; //text box increment
-            $(wrapper).append('<div><input type="text" class="form-control" name="actions[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+        if (x < max_fields) {
+            x++;
+            $(wrapper).append('<div class="input-group"><input type="text" class="form-control" name="actions[]"/><span class="input-group-btn"><button class="remove_field btn btn-danger btn-sm" type="button"><i class="fa fa-times" aria-hidden="true"></i> Remove </button></span></div>');
         }
     });
 
-    $(wrapper).on("click", ".remove_field", function (e) { //user click on remove text
+    $(wrapper).on("click", ".remove_field", function (e) {
         e.preventDefault();
         $(this).parent('div').remove();
         x--;
-    })
+    });
 });

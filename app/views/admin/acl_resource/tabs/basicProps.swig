@@ -24,17 +24,19 @@
             <i class="fa fa-plus" aria-hidden="true"></i> Add More
           </button>
 
-          <br>
+          {% if not item.actions %}
+            {% set item.actions = [''] %}
+          {% endif %}
 
           {% for action in item.actions %}
 
-            <div>
-              <input type="text" class="form-control" name="actions[]">
-              {% if not loop.first %}
-                <a href="#" class="remove_field btn btn-danger btn-sm">
-                  <i class="fa fa-times" aria-hidden="true"></i> Remove
-                </a>
-              {% endif %}
+            <div class="input-group">
+              <input type="text" class="form-control" name="actions[]" value="{{ action }}">
+              <span class="input-group-btn">
+                  <button class="remove_field btn btn-danger btn-sm" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i> Remove
+                  </button>
+                </span>
             </div>
 
           {% endfor %}
