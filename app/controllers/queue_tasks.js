@@ -1,26 +1,18 @@
 'use strict';
 
-/**
- * Requiring Core Library
- */
-var Core = process.mainModule.require('nodejs-lib');
+const Core                    = process.mainModule.require('nodejs-lib');
+const AdminBaseCrudController = require('./basecrud.js');
+const async                   = require('async');
+const kue                     = require('kue');
 
-/**
- * Requiring base Controller
- */
-var AdminBaseCrudController = require('./basecrud.js');
-
-/**
- *  AdminQueueTasks controller
- */
 class AdminQueueTasks extends AdminBaseCrudController {
 
     /**
      * Controller constructor
      */
-    constructor(request, response) {
+    constructor(request, response, next) {
         // We must call super() in child class to have access to 'this' in a constructor
-        super(request, response);
+        super(request, response, next);
 
         /**
          * Current CRUD model instance
@@ -28,7 +20,7 @@ class AdminQueueTasks extends AdminBaseCrudController {
          * @type {*}
          * @private
          */
-        this._model = require('../models/queue_task.js');
+        // this._model = require('../models/queue_task.js');
 
         /**
          * Context of the controller
@@ -52,7 +44,7 @@ class AdminQueueTasks extends AdminBaseCrudController {
          * @type {string[]}
          * @private
          */
-        this._modelSearchableFields = ['name', 'status'];
+        // this._modelSearchableFields = ['name', 'status'];
     }
 
     /**
@@ -70,49 +62,217 @@ class AdminQueueTasks extends AdminBaseCrudController {
         }.bind(this));
     }
 
+    load(callback) {
+
+        const locals = {};
+
+        let jobIds = [];
+
+        async.series([callback => {
+            this.canView(callback);
+        }, callback => {
+            this.onBeforeLoadList(callback);
+        }, callback => {
+            Core.ApplicationFacade.instance.queue.client.active((err, ids) => {
+                if (err) return callback(err);
+                jobIds = jobIds.concat(ids);
+                callback();
+            });
+        }, callback => {
+            Core.ApplicationFacade.instance.queue.client.inactive((err, ids) => {
+                if (err) return callback(err);
+                jobIds = jobIds.concat(ids);
+                callback();
+            });
+        }, callback => {
+
+            locals.data = {
+                items: []
+            };
+
+            async.eachLimit(jobIds, 10, (id, callback) => {
+
+                kue.Job.get(id, (err, job) => {
+                    if (err) return callback(err);
+
+                    const j = job.toJSON();
+
+                    j.createdAt = new Date(+j.created_at);
+
+                    console.log(j);
+
+                    locals.data.items.push(j);
+
+                    callback();
+                });
+
+            }, err => {
+                if (err) return callback(err);
+
+                callback();
+            });
+
+            // this.getListFiltered((err, data) => {
+            //     if (err) return callback(err);
+            //
+            //     locals.data = data;
+            //
+            //     callback();
+            // });
+
+        }, callback => {
+            // Initializing load list view and set page data
+            if (locals.data != null) {
+                for (var key in locals.data) {
+                    if (locals.data.hasOwnProperty(key)) {
+                        this.data[key] = locals.data[key];
+                    }
+                }
+            }
+
+            /**
+             * Used in sorting() macro in SWIG
+             */
+            // this.data.filter = this.getCachedRequestFilter();
+            // this.data.filter.sorting = this.getViewSorting();
+
+            this.data.createActionUrl = this.getActionUrl('create');
+            this.data.baseUrl = this._baseUrl;
+
+            // Send DATA_READY event
+            callback();
+
+        }, callback => {
+            this.loadItemsNotifications(callback);
+        }, callback => {
+            // Run after load items list
+            this.onAfterLoadList(callback);
+        }], err => {
+            /**
+             * Set output view object
+             */
+            this.view(this.getViewClassDefinition().htmlView(this.getViewFilename('list'), this.data, err));
+
+            callback(err);
+        });
+    }
+
+    /**
+     * Initialize view view
+     *
+     * @param readyCallback
+     */
+    doView(callback) {
+        this.canView(err => {
+            if (err) return callback(err);
+
+            this.data.isViewMode      = true;
+            this.data.item            = this.item;
+            this.data.cancelActionUrl = this.getActionUrl('list');
+            this.data.editActionUrl   = this.getActionUrl('edit', this.item);
+            if (this.isGetRequest || this.isHeadRequest) {
+                this.view(this.getViewClassDefinition().htmlView(this.getViewFilename('view')));
+                callback();
+            } else {
+                callback(new Error("Action isn't supported"));
+            }
+        });
+    }
+
+    /**
+     * Loading item from the db
+     *
+     * @param readyCallback
+     */
+    loadItem(callback) {
+
+        kue.Job.get(this.itemId, (err, item) => {
+            if (err) {
+                this.terminate();
+                this.response.redirect(this.getActionUrl('list'));
+
+                return callback(err);
+            }
+
+
+            if (item) {
+                this._item = item;
+
+                callback();
+
+            } else {
+
+                this.onItemNotFound(callback);
+            }
+        });
+    }
+
+    /**
+     * Proceed with Delete operation
+     *
+     * @param readyCallback
+     */
+    doDelete(readyCallback) {
+
+        this.canDelete(err => {
+            if (err) return readyCallback(err);
+
+            this.logger.info('Remove completed job #' + this.item.id);
+
+            this.item.remove(err => {
+                if (err) return readyCallback(err);
+
+                this.terminate();
+                this.response.redirect(this.getActionUrl('list'));
+
+                readyCallback();
+            });
+        });
+    }
+
     /**
      * Extract item from request
      *
      * @param item
      * @returns {{}}
      */
-    getItemFromRequest(item) {
-        var result = super.getItemFromRequest(item);
-
-        result.workerName  = this.request.body.workerName;
-        result.commandName = this.request.body.commandName;
-        result.priority    = this.request.body.priority || 1;
-
-        result.params = {};
-
-        if (this.request.body.params) {
-
-            this.request.body.params.forEach(param => {
-                if (param.name && param.value) {
-                    result.params[param.name] = param.value;
-                }
-            });
-        }
-
-        return result;
-    }
+    // getItemFromRequest(item) {
+    //     var result = super.getItemFromRequest(item);
+    //
+    //     result.workerName  = this.request.body.workerName;
+    //     result.commandName = this.request.body.commandName;
+    //     result.priority    = this.request.body.priority || 1;
+    //
+    //     result.params = {};
+    //
+    //     if (this.request.body.params) {
+    //
+    //         this.request.body.params.forEach(param => {
+    //             if (param.name && param.value) {
+    //                 result.params[param.name] = param.value;
+    //             }
+    //         });
+    //     }
+    //
+    //     return result;
+    // }
 
     /**
      * Returns view sorting options
      *
      * @returns {{}}
      */
-    getViewSorting() {
-
-        let sorting = super.getViewSorting();
-
-        if (Object.keys(sorting).length === 0) {
-
-            sorting = {field: 'priority', order: 'desc'}; // default sorting
-        }
-
-        return sorting;
-    }
+    // getViewSorting() {
+    //
+    //     let sorting = super.getViewSorting();
+    //
+    //     if (Object.keys(sorting).length === 0) {
+    //
+    //         sorting = {field: 'priority', order: 'desc'}; // default sorting
+    //     }
+    //
+    //     return sorting;
+    // }
 
     /**
      * Custom Loading item for Process action
@@ -121,12 +281,12 @@ class AdminQueueTasks extends AdminBaseCrudController {
      */
     preLoad(readyCallback) {
         super.preLoad(function (err) {
-            if (err) return callback(err);
+            if (err) return readyCallback(err);
 
             /**
              * Loading item
              */
-            if (this.request.params.action == 'process' && this.request.params.id) {
+            if (this.request.params.action === 'process' && this.request.params.id) {
                 var itemId = this.request.params.id;
                 this.model.findById(itemId, function (error, item) {
                     if (error != null) {
@@ -161,7 +321,7 @@ class AdminQueueTasks extends AdminBaseCrudController {
     create(readyCallback) {
         this.data.actionUrl = this.getActionUrl('create');
         this.data.baseUrl   = this.getActionUrl('list');
-        if (this.request.method == 'GET') {
+        if (this.request.method === 'GET') {
             this.view(Core.ModuleView.htmlView(this.getViewFilename('create')));
             readyCallback();
         } else {
@@ -196,7 +356,7 @@ class AdminQueueTasks extends AdminBaseCrudController {
         this.data.actionUrl = this.getActionUrl('create');
         this.data.baseUrl   = this.getActionUrl('list');
 
-        if (this.request.method == 'GET') {
+        if (this.request.method === 'GET') {
 
             this.item.delay  = new Date();
             this.item.status = 'queued';  // Set task as pending
@@ -220,14 +380,12 @@ class AdminQueueTasks extends AdminBaseCrudController {
         }
     }
 }
-;
 
 /**
  * Exporting Controller
  *
  * @type {Function}
  */
-module.exports = function (request, response) {
-    var controller = new AdminQueueTasks(request, response);
-    controller.run();
+module.exports = (request, response, next) => {
+    new AdminQueueTasks(request, response, next).run();
 };

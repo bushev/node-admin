@@ -14,7 +14,7 @@
         <a href="{{ createActionUrl }}" class="btn btn-success btn-block btn-create-msg">Create New</a>
       </p>
 
-      {{ search() }}
+      {#{{ search() }}#}
 
       <br/>
 
@@ -27,19 +27,19 @@
           {{ pagination_pages() }}
         </div>
 
-        {{ bulk_actions({check: true, bulkDelete: true}) }}
+        {#{{ bulk_actions({check: true, bulkDelete: true}) }}#}
 
       </div>
 
       <div class="list-group media-list msg-list">
-        <div class="list-group-item list-group-sorting">
-          <div class="">
-            Sort by:
-            {{ sorting_column({title: 'Created', field: 'createdAt'}) }}
-            {{ sorting_column({title: 'Scheduled', field: 'delay'}) }}
-            {{ sorting_column({title: 'Status', field: 'status'}) }}
-          </div>
-        </div>
+        {#<div class="list-group-item list-group-sorting">#}
+        {#<div class="">#}
+        {#Sort by:#}
+        {#{{ sorting_column({title: 'Created', field: 'createdAt'}) }}#}
+        {#{{ sorting_column({title: 'Scheduled', field: 'delay'}) }}#}
+        {#{{ sorting_column({title: 'Status', field: 'status'}) }}#}
+        {#</div>#}
+        {#</div>#}
 
         {% for item in items %}
           {% set viewActionUrl = baseUrl + '/' + item.id %}
@@ -52,13 +52,22 @@
             <div class="list-group-item-body">
 
               <div class="pull-right media-option">
-                <small>{{ moment(item.delay).utcOffset(utcOffset).calendar() }}</small>
+                <small>{{ moment(item.createdAt).utcOffset(utcOffset).calendar() }}</small>
+
+                {% if item.state === 'active' %}
+                  <div class="label label-success">active</div>
+                {% elseif item.state === 'inactive' %}
+                  <div class="label label-default">inactive</div>
+                {% else %}
+                  <div class="label label-danger">{{ item.state }}</div>
+                {% endif %}
+
                 {{ resource_action_buttons({deleteActionUrl: deleteActionUrl}) }}
               </div>
 
               <a href="{{ viewActionUrl }}">
                 <h4 class="sender">
-                  {{ item.queue }} - {{ item.name }}
+                  {{ item.type }} - {{ item.data.commandName }}
                 </h4>
               </a>
 

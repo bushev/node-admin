@@ -66,7 +66,7 @@
               </a>
 
               {% if item.status === 'failed' %}
-                <strong class="text-danger">{{ item.error.toString() }}</strong>
+                <pre class="text-danger">{{ item.error.toString() }}</pre>
                 <pre>{{ item.stack.toString() | replace('\\n', '<br>', 'g') | raw }}</pre>
               {% endif %}
 
