@@ -137,7 +137,7 @@ class JobModel extends BaseModel {
             this.logger.info(`Scheduler: process ${job.workerName}:${job.commandName}, ` +
                 `priority: ${job.priority}`);
 
-            Core.ApplicationFacade.instance.queue.enqueue({
+            Core.ApplicationFacade.instance.queueClient.enqueue({
                 workerName: job.workerName,
                 commandName: job.commandName,
                 params: params,

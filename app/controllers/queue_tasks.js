@@ -73,13 +73,13 @@ class AdminQueueTasks extends AdminBaseCrudController {
         }, callback => {
             this.onBeforeLoadList(callback);
         }, callback => {
-            Core.ApplicationFacade.instance.queue.client.active((err, ids) => {
+            Core.ApplicationFacade.instance.queueClient.client.active((err, ids) => {
                 if (err) return callback(err);
                 jobIds = jobIds.concat(ids);
                 callback();
             });
         }, callback => {
-            Core.ApplicationFacade.instance.queue.client.inactive((err, ids) => {
+            Core.ApplicationFacade.instance.queueClient.client.inactive((err, ids) => {
                 if (err) return callback(err);
                 jobIds = jobIds.concat(ids);
                 callback();
@@ -332,7 +332,7 @@ class AdminQueueTasks extends AdminBaseCrudController {
 
             try {
                 // Try to create new queue task using existing Queue instance
-                Core.ApplicationFacade.instance.queue.enqueue({
+                Core.ApplicationFacade.instance.queueClient.enqueue({
                     workerName: itemDetails.workerName,
                     commandName: itemDetails.commandName,
                     params: itemDetails.params,
