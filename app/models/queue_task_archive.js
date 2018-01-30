@@ -3,7 +3,7 @@
 /**
  * Base model
  */
-var BaseModel = require('./base');
+const BaseModel = require('./base');
 
 /**
  *  Worker model
@@ -24,9 +24,9 @@ class QueueTaskArchiveModel extends BaseModel {
      */
     defineSchema() {
 
-        var Types = this.mongoose.Schema.Types;
+        const Types = this.mongoose.Schema.Types;
 
-        var schemaObject = {
+        const schemaObject = {
             name: {type: String, index: true},
             params: Types.Mixed,
             queue: {type: String, index: true},
@@ -36,14 +36,14 @@ class QueueTaskArchiveModel extends BaseModel {
             status: {type: String, index: true},
             enqueued: Date,
             dequeued: Date,
-            ended: Date,
+            ended: {type: Date, index: true},
             error: {type: String},
             stack: {type: String},
             result: {}
         };
 
         // Creating DBO Schema
-        var QueueTaskArchiveDBOSchema = this.createSchema(schemaObject);
+        const QueueTaskArchiveDBOSchema = this.createSchema(schemaObject);
 
         // Registering schema and initializing model
         this.registerSchema(QueueTaskArchiveDBOSchema);
@@ -53,7 +53,7 @@ class QueueTaskArchiveModel extends BaseModel {
 /**
  * Creating instance of the model
  */
-var modelInstance = new QueueTaskArchiveModel('queue_tasks_archive');
+const modelInstance = new QueueTaskArchiveModel('queue_tasks_archive');
 
 /**
  * Exporting Model
