@@ -3,6 +3,18 @@
     <h4>Front UI</h4>
 
     <div class="form-group">
+        <label class="col-sm-3 control-label">Maintenance</label>
+        <div class="col-sm-09">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="maintenance"
+                           {% if item.frontui.maintenance %}checked{% endif %} />&nbsp;
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-3 control-label">Require Login</label>
         <div class="col-sm-09">
             <div class="checkbox">

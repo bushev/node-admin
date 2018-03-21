@@ -77,6 +77,7 @@ class AdminConfiguration extends AdminBaseCrudController {
         };
 
         result.frontui = {
+            maintenance: this.request.body.maintenance === "on",
             requireLogin: this.request.body.requireLogin === "on",
             enableLogin: this.request.body.enableLogin === "on",
             enableRegistration: this.request.body.enableRegistration === "on"

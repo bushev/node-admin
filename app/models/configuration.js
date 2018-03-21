@@ -53,6 +53,7 @@ class ConfigurationModel extends BaseModel {
                 azureAccessKey: {type: String}
             },
             frontui: {
+                maintenance: {type: Boolean, default: false},
                 requireLogin: {type: Boolean, default: false},
                 enableLogin: {type: Boolean, default: true},
                 enableRegistration: {type: Boolean, default: true}
