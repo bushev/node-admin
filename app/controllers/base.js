@@ -6,9 +6,18 @@ const momentTimezone = require('moment-timezone');
 
 class AdminBaseController extends Core.Controller {
 
-    /**
-     * Pre-initialize data and event handlers
-     */
+    constructor(request, response, next) {
+
+        super(request, response, next);
+
+        /**
+         * Redirect unauthenticated user to this URL
+         *
+         * @type {string}
+         */
+        this.unauthenticatedRedirectUrl = '/admin/login';
+    }
+
     preInit(callback) {
 
         this._viewsPath = path.join(__dirname, '..', 'views', 'admin', this._viewsPath || '');
@@ -20,7 +29,7 @@ class AdminBaseController extends Core.Controller {
             this.request.session.returnUrl = this.request.protocol + '://' + this.request.get('host') + this.request.originalUrl;
             this.flash.addMessage("You must be logged in to access Admin UI!", Core.FlashMessageType.ERROR);
             this.terminate();
-            this.response.redirect('/admin/login');
+            this.response.redirect(this.unauthenticatedRedirectUrl);
 
             callback();
         } else if (!this.isAdminUser()) {

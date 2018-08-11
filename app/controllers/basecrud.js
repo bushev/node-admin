@@ -66,9 +66,9 @@ class BaseCRUDController extends Core.Controllers.CRUDController {
     /**
      * Controller constructor
      */
-    constructor(request, response) {
+    constructor(request, response, next) {
         // We must call super() in child class to have access to 'this' in a constructor
-        super(request, response);
+        super(request, response, next);
 
         /**
          * Current CRUD model instance
@@ -126,6 +126,13 @@ class BaseCRUDController extends Core.Controllers.CRUDController {
          * @private
          */
         this._baseViewsDir = path.join(__dirname, '..', 'views', 'admin', '');
+
+        /**
+         * Redirect unauthenticated user to this URL
+         *
+         * @type {string}
+         */
+        this.unauthenticatedRedirectUrl = '/admin/login';
     }
 
     /**
@@ -140,7 +147,7 @@ class BaseCRUDController extends Core.Controllers.CRUDController {
             this.request.session.returnUrl = this.request.protocol + '://' + this.request.get('host') + this.request.originalUrl;
             this.flash.addMessage("You must be logged in to access Admin UI!", Core.FlashMessageType.ERROR);
             this.terminate();
-            this.response.redirect('/login');
+            this.response.redirect(this.unauthenticatedRedirectUrl);
 
             callback();
         } else if (!this.isAdminUser()) {
