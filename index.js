@@ -104,12 +104,26 @@ class Loader extends Core.AppBootstrap {
 
         if (process.env.IS_MASTER === 'yes') {
 
-            Loader.Admin.Models.Navigation.addItem({
-                name: 'Dashboard',
-                icon: 'fa-tachometer',
-                url: '/admin',
-                order: 0
-            });
+            if (Core.ApplicationFacade.instance.config.env.NODEJS_ADMIN_NAVIGATION_FRONT_UI === 'yes') {
+
+                Loader.Admin.Models.Navigation.addItem({
+                    name: 'Front UI',
+                    icon: 'fa-home',
+                    url: '/',
+                    order: 10
+                });
+            }
+
+            if (Core.ApplicationFacade.instance.config.env.NODEJS_ADMIN_NAVIGATION_DASHBOARD === 'yes') {
+
+                Loader.Admin.Models.Navigation.addItem({
+                    name: 'Dashboard',
+                    icon: 'fa-tachometer',
+                    url: '/admin',
+                    order: 10,
+                    resource: 'Dashboard'
+                });
+            }
 
             if (Core.ApplicationFacade.instance.config.env.NODEJS_ADMIN_NAVIGATION_USERS === 'yes') {
 
@@ -117,7 +131,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Users',
                     icon: 'fa-users',
                     url: '/admin/users',
-                    order: 100
+                    order: 100,
+                    resource: 'User'
                 });
             }
 
@@ -133,7 +148,8 @@ class Loader extends Core.AppBootstrap {
                     }, {
                         name: 'Audit Logs',
                         url: '/admin/audit_logs'
-                    }]
+                    }],
+                    resource: 'Log'
                 });
             }
 
@@ -149,7 +165,8 @@ class Loader extends Core.AppBootstrap {
                     }, {
                         name: 'Archive',
                         url: '/admin/queue_tasks_archives'
-                    }]
+                    }],
+                    resource: 'Queue'
                 });
             }
 
@@ -165,7 +182,8 @@ class Loader extends Core.AppBootstrap {
                     }, {
                         name: 'Hooks',
                         url: '/admin/webhooks'
-                    }]
+                    }],
+                    resource: 'Webhook'
                 });
             }
 
@@ -175,7 +193,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Notifications',
                     icon: 'fa-cloud',
                     url: '/admin/notifications',
-                    order: 104
+                    order: 104,
+                    resource: 'Notification'
                 });
             }
 
@@ -185,7 +204,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'API Keys',
                     icon: 'fa-key',
                     url: '/admin/api_keys',
-                    order: 105
+                    order: 105,
+                    resource: 'APIKey'
                 });
             }
 
@@ -195,7 +215,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Configuration',
                     icon: 'fa-cogs',
                     url: '/admin/configurations',
-                    order: 106
+                    order: 106,
+                    resource: 'Configuration'
                 });
             }
 
@@ -214,7 +235,8 @@ class Loader extends Core.AppBootstrap {
                     }, {
                         name: 'Roles',
                         url: '/admin/acl_roles'
-                    }]
+                    }],
+                    resource: 'ACL'
                 });
             }
 
@@ -224,7 +246,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Assets',
                     icon: 'fa-file-text',
                     url: '/admin/assets',
-                    order: 107
+                    order: 107,
+                    resource: 'Asset'
                 });
             }
 
@@ -234,7 +257,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'PUSH Notifications',
                     icon: 'fa-bolt',
                     url: '/admin/push_notifications',
-                    order: 108
+                    order: 108,
+                    resource: 'PUSHNotification'
                 });
             }
 
@@ -244,7 +268,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Jobs',
                     icon: 'fa-tasks',
                     url: '/admin/jobs',
-                    order: 109
+                    order: 109,
+                    resource: 'Job'
                 });
             }
 
@@ -254,7 +279,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'SEO',
                     icon: 'fa-file-text-o',
                     url: '/admin/seo_data_common',
-                    order: 110
+                    order: 110,
+                    resource: 'SEO'
                 });
             }
 
@@ -264,7 +290,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Robots',
                     icon: 'fa-android',
                     url: '/admin/robots',
-                    order: 111
+                    order: 111,
+                    resource: 'Robot'
                 });
             }
 
@@ -274,7 +301,8 @@ class Loader extends Core.AppBootstrap {
                     name: 'Tickets',
                     icon: 'fa-envelope-o',
                     url: '/admin/tickets',
-                    order: 112
+                    order: 112,
+                    resource: 'Ticket'
                 });
             }
         }

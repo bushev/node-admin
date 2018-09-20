@@ -1,7 +1,4 @@
 <ul class="nav nav-pills nav-stacked">
-  <li>
-    <a href="/" target="_blank"><i class="fa fa-home"></i> <span>Front UI</span></a>
-  </li>
   {% if loggedUser %}
     {% if loggedUser.isAdmin %}
       {% for item in navigation %}
