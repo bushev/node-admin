@@ -60,6 +60,8 @@ class AdminConfiguration extends AdminBaseCrudController {
             name: this.request.body.projectName
         };
 
+        result.projectConfig = this.request.body.projectConfig;
+
         result.mandrill = {
             apiKey: this.request.body.mandrillApiKey,
             fromName: this.request.body.mandrillFromName,
