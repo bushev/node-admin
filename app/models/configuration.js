@@ -100,7 +100,7 @@ class ConfigurationModel extends BaseModel {
             if (err) return console.log('Unable to get Configuration. ' + err.message);
 
             if (configuration.length === 0) {
-                this._configuration = {};
+                this._configuration = {projectConfig: {}};
                 console.log('Configuration entry was not found in the Database.');
                 return callback(this._configuration);
             }
