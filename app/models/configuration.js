@@ -36,6 +36,7 @@ class ConfigurationModel extends BaseModel {
             project: {
                 name: {type: String}
             },
+            projectConfig: {type: String},
             mandrill: {
                 apiKey: {type: String},
                 fromName: {type: String},
@@ -100,6 +101,13 @@ class ConfigurationModel extends BaseModel {
             }
 
             this._configuration = configuration[0];
+
+            try {
+                this._configuration.projectConfig = JSON.parse(this._configuration.projectConfig);
+            } catch (e) {
+                this._configuration.projectConfig = {};
+            }
+
             console.log('#### Configuration loaded');
 
             if (callback != null) {

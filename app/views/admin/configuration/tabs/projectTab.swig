@@ -10,4 +10,13 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="projectConfig">Project config</label>
+
+    <div class="col-sm-9">
+      <textarea rows="20" name="projectConfig" id="projectConfig"
+                class="form-control">{{ item.project.projectConfig }}</textarea>
+    </div>
+  </div>
+
 </div>
