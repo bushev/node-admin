@@ -96,7 +96,7 @@ class ConfigurationModel extends BaseModel {
      * @param callback
      */
     readConf(callback) {
-        this.model.find({}).exec(function (err, configuration) {
+        this.model.find({}).lean().exec(function (err, configuration) {
             if (err) return console.log('Unable to get Configuration. ' + err.message);
 
             if (configuration.length === 0) {
