@@ -1,6 +1,6 @@
 {
   "name": "nodejs-admin",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "dependencies": {
     "acl": "0.4.11",
     "apn": "2.1.5",

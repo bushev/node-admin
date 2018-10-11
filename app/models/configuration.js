@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * Base model
- */
 var BaseModel = require('./base');
+const Core    = process.mainModule.require('nodejs-lib');
 
 /**
  *  Configuration model class
@@ -76,6 +74,13 @@ class ConfigurationModel extends BaseModel {
 
         // Creating DBO Schema
         var ConfigurationDBOSchema = this.createSchema(schemaObject);
+
+        ConfigurationDBOSchema.post('save', () => {
+
+            this.readConf(function (config) {
+                Core.ApplicationFacade.instance.config.mergeConfig(config);
+            });
+        });
 
         // Registering schema and initializing model
         this.registerSchema(ConfigurationDBOSchema);
