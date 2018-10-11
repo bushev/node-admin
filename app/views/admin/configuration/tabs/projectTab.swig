@@ -15,7 +15,7 @@
 
     <div class="col-sm-9">
       <textarea rows="20" name="projectConfig" id="projectConfig"
-                class="form-control">{{ item.project.projectConfig }}</textarea>
+                class="form-control">{{ item.projectConfig }}</textarea>
     </div>
   </div>
 
