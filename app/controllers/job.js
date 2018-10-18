@@ -23,7 +23,7 @@ class AdminJobController extends AdminBaseCrudController {
          * @type {Array}
          * @private
          */
-        this._modelEditableFields = ['name', 'schedule', 'workerName', 'commandName', 'priority', 'enabled'];
+        this._modelEditableFields = ['name', 'schedule', 'workerName', 'commandName', 'priority', 'ttl', 'enabled'];
 
         /**
          *

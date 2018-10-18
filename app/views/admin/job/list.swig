@@ -80,7 +80,7 @@
 
               <a href="{{ viewActionUrl }}">
                 <h4 class="sender">
-                  {{ item.name }} | priority: {{ item.priority }}
+                  {{ item.name }} | priority: {{ item.priority }} | ttl: {{ item.ttl }}
                 </h4>
               </a>
 
