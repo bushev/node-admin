@@ -53,6 +53,8 @@ class JobModel extends BaseModel {
 
             priority: {type: Number, 'default': 1, index: true, required: true},
 
+            ttl: {type: Number, 'default': 60 * 1000, required: true},
+
             enabled: {type: Boolean, 'default': false, required: true},
 
             createdAt: {type: Date, 'default': Date.now, index: true}
@@ -141,7 +143,8 @@ class JobModel extends BaseModel {
                 workerName: job.workerName,
                 commandName: job.commandName,
                 params: params,
-                priority: job.priority
+                priority: job.priority,
+                ttl: job.ttl
             });
         });
 

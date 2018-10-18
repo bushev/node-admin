@@ -45,10 +45,16 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-9">
           <div class="form-group">
             <label class="control-label" for="schedule">Schedule</label>
             <input type="text" id="schedule" name="schedule" class="form-control" value="{{ item.schedule }}"/>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label class="control-label" for="ttl">TTL (ms)</label>
+            <input type="number" id="ttl" name="ttl" class="form-control" value="{{ item.ttl }}"/>
           </div>
         </div>
       </div>
