@@ -65,6 +65,10 @@
                 </h4>
               </a>
 
+              {% if item.status === 'complete' %}
+                <pre class="text-success">{{ item.result | json(2) }}</pre>
+              {% endif %}
+
               {% if item.status === 'failed' %}
                 <pre class="text-danger">{{ item.error.toString() }}</pre>
                 <pre>{{ item.stack.toString() | replace('\\n', '<br>', 'g') | raw }}</pre>
