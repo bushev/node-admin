@@ -39,7 +39,8 @@ class QueueTaskArchiveModel extends BaseModel {
             ended: {type: Date, index: true},
             error: {type: String},
             stack: {type: String},
-            result: {}
+            result: {},
+            createdAt: {type: Date, expires: '30 days', 'default': Date.now, index: true}
         };
 
         // Creating DBO Schema
