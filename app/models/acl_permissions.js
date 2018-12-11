@@ -2,6 +2,9 @@
 
 const Core      = process.mainModule.require('nodejs-lib');
 const BaseModel = require('./base');
+const aclModule = require('acl');
+
+let allows = [];
 
 class AclPermissionModel extends BaseModel {
 
@@ -9,11 +12,7 @@ class AclPermissionModel extends BaseModel {
 
         super(listName);
 
-        /**
-         * ACL instance
-         * @type {null}
-         */
-        this.acl = null;
+        this.acl = new aclModule(new aclModule.memoryBackend());
     }
 
     /**
@@ -60,24 +59,38 @@ class AclPermissionModel extends BaseModel {
      * @param callback
      */
     initAcl(callback) {
-        const aclModule = require('acl');
 
-        this.acl = new aclModule(new aclModule.memoryBackend());
+        // Cleanup
+        async.eachSeries(allows, (allow, callback) => {
 
-        this.model.find({})
-            .populate('aclRole aclResource')
-            .exec((err, permissions) => {
-                if (err) return callback(err);
+            this.logger.info('ACL Remove Allow: ' + allow.role + ' - ' + allow.resource + ' [' + allow.action + ']');
 
-                permissions.forEach(permission => {
+            this.acl.removeAllow(allow.role, allow.resource, allow.action, callback);
 
-                    this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
+        }, err => {
+            if (err) return callback(err);
 
-                    this.acl.allow(permission.aclRole.name, permission.aclResource.name, permission.actionName);
+            this.model.find({})
+                .populate('aclRole aclResource')
+                .exec((err, permissions) => {
+                    if (err) return callback(err);
+
+                    permissions.forEach(permission => {
+
+                        this.logger.info('ACL Allow: ' + permission.aclRole.name + ' - ' + permission.aclResource.name + ' [' + permission.actionName + ']');
+
+                        this.acl.allow(permission.aclRole.name, permission.aclResource.name, permission.actionName);
+
+                        allows.push({
+                            role: permission.aclRole.name,
+                            resource: permission.aclResource.name,
+                            action: permission.actionName
+                        });
+                    });
+
+                    callback(null, this.acl);
                 });
-
-                callback(null, this.acl);
-            });
+        });
     }
 
     /**
