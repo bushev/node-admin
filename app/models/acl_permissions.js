@@ -3,6 +3,7 @@
 const Core      = process.mainModule.require('nodejs-lib');
 const BaseModel = require('./base');
 const aclModule = require('acl');
+const async     = require('async');
 
 let allows = [];
 
