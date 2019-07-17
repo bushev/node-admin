@@ -308,6 +308,23 @@ jQuery(document).ready(function () {
         });
     }
 
+    var sortingSelector = $('a.sorting');
+    if (sortingSelector.length > 0) {
+        sortingSelector.each(function () {
+
+            var search = window.location.search || '';
+
+            search = search.replace(/&?filter\[(sortingField|sortingOrder)]=[a-z]+/ig, '');
+
+            // Get: window.location.search
+            // Remove
+            // ?filter[sortingField]=createdAt&filter[sortingOrder]=asc
+            // Apply other params
+
+            $(this).attr('href', $(this).attr('href') + '&' + search);
+        });
+    }
+
     var bulkEdit = $('a[class="bulk-edit"]');
     if (bulkEdit.length > 0) {
         bulkEdit.attr('href', bulkEdit.attr('href') + window.location.search);
