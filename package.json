@@ -11,7 +11,7 @@
     "font-awesome": "4.7.0",
     "excel-parser": "0.2.2",
     "ip": "1.1.5",
-    "lodash": "4.17.4",
+    "lodash": "4.17.19",
     "merge": "1.2.0",
     "moment": "2.19.3",
     "moment-timezone": "0.5.14",
