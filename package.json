@@ -26,7 +26,7 @@
     "tempfile": "2.0.0",
     "tinymce": "4.7.3",
     "validator": "9.1.2",
-    "xlsx": "0.11.10"
+    "xlsx": "0.17.0"
   },
   "devDependencies": {
     "nodejs-lib": "2.0.0",
