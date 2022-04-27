@@ -4,7 +4,7 @@
   "dependencies": {
     "acl": "0.4.11",
     "apn": "2.1.5",
-    "async": "2.6.0",
+    "async": "2.6.4",
     "bcrypt-nodejs": "0.0.3",
     "bootstrap": "3.3.7",
     "bootstrap-daterangepicker": "2.1.30",
